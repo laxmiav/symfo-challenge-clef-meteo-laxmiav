@@ -1,0 +1,61 @@
+<?php  
+//  /**
+//      * @Route("/city_weather", name="city_weather")
+//      */
+//     public function showcity(SessionInterface $session): Response
+//     {
+//         // récupérer les movies qui sont en session
+//         $weatherByCity = $session->get('cities_list', []);
+//         $citiesWeather = [];
+
+//         foreach ($weatherByCity as $index)
+//         {
+//             $citiesWeather[$index] = WeatherModel::getWeatherByCityIndex($index);;
+//         }
+        
+//         // var_dump($favoriteMoviesComplete); die();
+
+//         return $this->render('main/city_weather.html.twig', [
+//             'cityWeather' =>  $citiesWeather,
+//         ]);
+//     }
+
+//     /**
+//      * @Route("/city_weather/{$cityId}", name="addcityweather" )
+//      */
+//     public function addcity(int $cityId, SessionInterface $session): Response
+//     {
+//         // récupérer le tableau qui est actuellement en session
+//         $weatherByCity = $session->get('cities_list', []);
+
+//         // ajouter la clef dans ce tableau
+//         $weatherByCity[$cityId] = $cityId;
+
+//         // ré-enregistrer le tableau complet en session
+//         $session->set('cities_list', $weatherByCity);
+
+//         return $this->redirectToRoute('city_weather');
+
+//         // echo $movieId;die();
+//     }
+
+
+
+
+
+/**
+     * @Route("/city_weather/{id}", name="city_weather")
+     */
+    public function cityWeather($cityId, SessionInterface $session)
+    {
+
+
+        $weatherByCity = $session->get('cities_list', []);
+        $weatherByCity[$cityId] = $cityId;
+        $session->set('cities_list', $weatherByCity);
+        $cityWeather = WeatherModel::getWeatherByCityIndex($cityId);
+        
+        return $this->render('main/city_weather.html.twig', [
+            'cityweather' => $cityWeather
+        ]);
+    }

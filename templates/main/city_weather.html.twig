@@ -1,0 +1,16 @@
+
+
+
+             
+                
+    {% if (cityweather == true) %}
+                    <!-- Si ville sélectionnée -->
+                    <p><b>{{cityweather.city}}</b></p>
+                    <p>{{cityweather.date}}</p>
+                    <p><img src="/images/{{cityweather.weather}}.png"></p>
+                    <p>{{cityweather.min}}°C / {{cityweather.max}}°C</p>
+     {% else %}     
+
+ <div>Sélectionnez une ville<br>dans la liste de gauche</div>
+{% endif %}
+
