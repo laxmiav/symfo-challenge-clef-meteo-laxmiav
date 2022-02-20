@@ -1,4 +1,4 @@
-<?php  
+ 
 //  /**
 //      * @Route("/city_weather", name="city_weather")
 //      */
@@ -59,3 +59,18 @@
             'cityweather' => $cityWeather
         ]);
     }
+    // // /**
+    // //  * @Route("/city_weather/add/{id}", name="city_add_weather")
+    // //  */
+    // public function addweather(int $id, SessionInterface $session)
+    // {
+    //     // récupérer le tableau qui est actuellement en session
+    //     $currentCities = $session->get('cities_list');
+    //     $currentCities[$id] = [$id];
+
+
+
+    //     $cityWeather = WeatherModel::getWeatherByCityIndex($id);
+         
+    //     return $this->redirectToRoute('home');
+    // }
