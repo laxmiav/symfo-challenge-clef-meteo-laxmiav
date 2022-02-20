@@ -8,7 +8,7 @@
 
                 <h1 class="mb-5">Bienvenue sur la météo des villes !</h1>
             {% for key, weather in citiesWeather %}
-                <div class="item item--bg-{{weather.weather}}">
+                <div id= "cities" class="item item--bg-{{weather.weather}}">
                   
                     <div class="item--city"><a href="{{path('city_weather',{"id": key})}}">{{weather.city}}</a></div>
                     <div class="item--forecast">{{weather.date}} : {{weather.min}}°C /{{weather.max}}°C</div>
