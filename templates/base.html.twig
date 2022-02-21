@@ -1,84 +1,74 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <!-- Balises pour le responsive -->
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+
+    <!-- Balises pour le responsive -->
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-      
-         <title>{% block title %}O'Météo{% endblock %}</title> 
-        
+
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 
     <!-- Notre CSS custom -->
-    <link rel="stylesheet" href="{{asset('css/app.css')}}">
-    <!-- favicon -->
-    <link rel="shortcut icon" href="{{asset('favicon.png')}}" type="image/png">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
+     <link rel="shortcut-icon" type="images/x-icon" href="{{ asset('favicon.png') }}">
+</head>
 
-    </head>
-  <body >
-
-
-
+<body class="mb-5">
     <nav class="container py-3 mb-3">
+        <ul class="nav nav-pills">
 
-  
-         <ul class="nav nav-pills">
-            <a href="{{path('home')}}" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none header-logo">
-                <img src="{{asset('favicon.png')}}" height="24" alt="sympony">
-                <span class="header-logo__title"  >O'Météo</span>
-            </a>
-           
+<li class="header-logo__title">O'Météo<li/>
 
-
-        
+        {# todo gérer le active sur la bonne navigation #}
             <li class="nav-item">
-                <a class="nav-link " href="{{path('home')}}">Accueil</a>
+                <a class="nav-link " href="{{ path('homepage') }}">Accueil</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link " href="{{path('mountain')}}">Montagne</a>
+                <a class="nav-link " href="{{ path('mountain') }}">Montagne</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link " href="{{path('beaches')}}">Plages</a>
+                <a class="nav-link " href="{{ path('beach') }}">Plages</a>
             </li>
         </ul>
-        
     </nav>
 
     <!-- Minimal responsive + columns -->
     <main class="container">
         <div class="row">
+            <!-- Content (les pages) -->
+            {% block body %}{% endblock %}
 
-    {% block body %}{% endblock %}
-<div class="col-3">
+            <!-- Sidebar (le widget) -->
+            <div class="col-3">
 
                 <!-- Code du widget -->
                 <div id="widget">
+                {% if (app.session.has('widget_city') ) %}
+                {% set favorite_city = app.session.get('widget_city') %}
 
-    <!-- Sidebar (le widget) -->
-
-   
-              {{ include('main/city_weather.html.twig' ) }} 
+                    <!-- Si ville sélectionnée -->
+                    <p><b>{{ favorite_city.city }}</b></p>
+                    <p>{{ favorite_city.date }}</p>
+                    {# pour concaténer dans twig on peut utiliser le ~ #}
+                    <p><img src="{{ asset('images/') }}{{ favorite_city.weather }}.png"></p>
+                    <p>{{ favorite_city.min }}°C / {{ favorite_city.max }}°C</p>
+                {% else %}
                     <!-- Si ville non sélectionnée -->
-                 
-
+                    <div>Sélectionnez une ville<br>dans la liste de gauche</div>
+                {% endif %}
                 </div>
 
             </div>
         </div>
     </main>
-
-
-    
-    <footer >
-    All rights reserved to O'Météo
+    <footer>
+    All Rights reserved to O'Météo.
     </footer>
-   
 
 </body>
 
 </html>
-
-
-
-            

@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bienvenue sur le site de la météo des villes{% endblock %}
+
+{% block body %}
+<div class="col-9">
+
+    <h1 class="mb-5">Bienvenue sur la météo des villes !</h1>
+    {% for city_index, forecast in forecast_list %}
+    <div id="cities" class="item item--bg-{{ forecast.weather }}">
+        <div class="item--city"><a href="{{ path('widget_add', {cityId : city_index} ) }}">{{ forecast.city }}</a></div>
+        {# 
+            avec le pipe `|` on peut appeler une méthode sur nos données
+            ici le date est la fonction date de php appliquée sur la date juste avant
+        #}
+        <div class="item--forecast">{{ forecast.date|date('d-m') }} : {{ forecast.min }}°C / {{ forecast.max }}°C</div>
+    </div>
+    {% endfor %}
+
+</div>
+{% endblock %}

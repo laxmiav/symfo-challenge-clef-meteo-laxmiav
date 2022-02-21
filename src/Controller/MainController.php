@@ -5,111 +5,70 @@ namespace App\Controller;
 use App\Model\WeatherModel;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController
 {
     /**
-     * @Route("/", name="home")
+     * @Route("/", name="homepage", methods={"GET"})
      */
-    public function home(SessionInterface $session): Response
+    public function homepage(): Response
     {
-        $citiesWeather = WeatherModel::getWeatherData();
-        $currentCities = $session->get('cities_list', [0]);
-       
-        $addedCities = $currentCities[0];
-        // var_dump($addedCities);
-        // die();
-        //$currentCities[$id] = $id;
-        foreach ($currentCities as $newid) {
-            $addedCities = WeatherModel::getWeatherByCityIndex($newid);
-            //var_dump($addedCities);die();
-        }
-        //$cityweather[$addedCities]=
-      
-        return $this->render('main/home.html.twig', [
-            'citiesWeather' => $citiesWeather,
-           'cityweather'=>  $addedCities ,
+        // préparation des données
+        // selon l'énoncé on utilise cette méthode pour récupérer toutes les données
+        $forecastList = WeatherModel::getWeatherData();
+
+        return $this->render('main/homepage.html.twig', [
+            'forecast_list' => $forecastList,
         ]);
     }
 
     /**
-        * @Route("/mountain", name="mountain")
-        */
-    public function mountain(SessionInterface $session): Response
+     * @Route("/meteo/montagne", name="mountain", methods={"GET"})
+     */
+    public function mountain(): Response
     {
-        $currentCities = $session->get('cities_list', [0]);
-       
-        $addedCities = $currentCities[0];
-        // var_dump($addedCities);
-        // die();
-        //$currentCities[$id] = $id;
-        foreach ($currentCities as $newid) {
-            $addedCities = WeatherModel::getWeatherByCityIndex($newid);
-            //var_dump($addedCities);die();
-        }
         return $this->render('main/mountain.html.twig', [
-            'cityweather'=>  $addedCities,
+            'controller_name' => 'MainController',
         ]);
     }
-    /**
-     * @Route("/beaches", name="beaches")
-     */
-    public function beaches(SessionInterface $session): Response
-    {
-        $currentCities = $session->get('cities_list', [0]);
-       
-        $addedCities = $currentCities[0];
 
-        // var_dump($addedCities);
-        // die();
-        //$currentCities[$id] = $id;
-        foreach ($currentCities as $newid) {
-            $addedCities = WeatherModel::getWeatherByCityIndex($newid);
-            //var_dump($addedCities);die();
+    /**
+     * @Route("/meteo/plage", name="beach", methods={"GET"})
+     */
+    public function beach(): Response
+    {
+        return $this->render('main/beach.html.twig', [
+            'controller_name' => 'MainController',
+        ]);
+    }
+
+    /**
+     * @Route("/widget/add/{cityId}", name="widget_add", methods={"GET"}, requirements={"cityId"="\d+"})
+     */
+    public function widgetAdd(int $cityId, SessionInterface $session): Response
+    {
+        // récupérer la ville à ajouter
+        $cityInformation = WeatherModel::getWeatherByCityIndex($cityId);
+        
+        // gérer le cas ou la ville n'existe pas
+        // et renvoyer une page 404
+        if (is_null($cityInformation))
+        {
+            return $this->createNotFoundException('Cette ville n\'existe pas');
         }
-        return $this->render('main/beaches.html.twig', [
-            'cityweather'=> $addedCities,
-        ]);
+
+        // écrire en session les informations de la ville
+        $session->set('widget_city', $cityInformation);
+        // si on veut lire cette valeur dans un controleur on utilise la méthode get
+        // $session->get('widget_city', null]);
+
+        // $_SESSION['widget_city'] = ;
+
+        // rajouter un flash message
+
+        // rediriger vers la page d'accueil
+        return $this->redirectToRoute('homepage');
     }
-
-
-
-    // =================================================
-    // ====================================================
-
-    /**
-     * @Route("/city_weather/{id}", name="city_weather")
-     */
-    public function show(int $id, SessionInterface $session,Request $request)
-    {
-
-  // récupérer le tableau qui est actuellement en session
-        $currentCities = $session->get('cities_list', []);
-        $currentCitiesids = [$id];
-        //var_dump($currentCitiesids);die();
-        $add = $session->set('cities_list', $currentCitiesids);
-        //var_dump($add);die();
-        $cityWeather = WeatherModel::getWeatherByCityIndex($id);
-        //var_dump($cityWeather);
-        //die();
-        return $this->redirect($request->headers->get('referer'));
-        return $this->render('main/city_weather.html.twig', [
-            'cityweather' => $cityWeather
-        ]);
-    }
-
-
-    }
-
-
-
-
-
-
-
-
-
-
+}
